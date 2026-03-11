@@ -229,8 +229,11 @@ def main() -> None:
         # PyG dataset doesn't need sampler - data is already in memory
         sampler = None
 
-    elif args.backbone == "enhanced_graph" and (args.use_angles or args.use_deepaw_features):
-        # Use EnhancedGraphDataset for angles or DeePAW features
+    elif args.backbone == "enhanced_graph" and args.use_angles:
+        # Use EnhancedGraphDataset only when angle features are requested.
+        # DeePAW feature extraction only needs per-atom positions, which are already
+        # provided by the standard ASE dataset + collate_graph_samples, and that
+        # path supports graph caching.
         dataset_cls = EnhancedGraphDataset
         collate_fn = collate_enhanced_graph_samples
         dataset_kwargs = {
