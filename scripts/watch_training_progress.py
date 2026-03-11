@@ -77,7 +77,9 @@ def _tail_progress(train_log: Path) -> Tuple[Optional[str], Optional[float]]:
 
     # Phase 0: target/mask preloading (ASE dataset).
     m = None
-    for mm in re.finditer(r"Preloading:\s+\s*(\d+)/(\d+)", text):
+    # tqdm format example:
+    # "Preloading:   7%|▋         | 8665/123903 [03:10<42:12, 45.53it/s]"
+    for mm in re.finditer(r"Preloading:.*?\|\s*(\d+)/(\d+)\s+\[", text):
         m = mm
     if m:
         cur = int(m.group(1))
