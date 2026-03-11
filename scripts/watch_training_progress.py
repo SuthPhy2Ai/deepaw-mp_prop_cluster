@@ -33,17 +33,31 @@ def _run(cmd: list[str]) -> str:
 
 def _find_pid(pattern: str) -> Optional[int]:
     try:
-        out = _run(["bash", "-lc", f"pgrep -af '{pattern}' | head -n 1 || true"])
+        out = _run(["bash", "-lc", f"pgrep -af '{pattern}' || true"])
     except Exception:
         return None
     if not out:
         return None
-    # Format: "<pid> <cmd...>"
-    pid_str = out.split()[0]
-    try:
-        return int(pid_str)
-    except ValueError:
-        return None
+
+    self_pid = os.getpid()
+    for line in out.splitlines():
+        parts = line.strip().split(maxsplit=1)
+        if not parts:
+            continue
+        try:
+            pid = int(parts[0])
+        except ValueError:
+            continue
+        cmdline = parts[1] if len(parts) > 1 else ""
+
+        # Avoid matching the watcher itself (its argv contains the pattern string).
+        if pid == self_pid:
+            continue
+        if "watch_training_progress.py" in cmdline:
+            continue
+        return pid
+
+    return None
 
 
 def _tail_progress(train_log: Path) -> Tuple[Optional[str], Optional[float]]:
@@ -157,4 +171,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
