@@ -417,6 +417,10 @@ def main() -> None:
         "n_rbf": args.n_rbf,
         "use_angles": args.use_angles,
         "use_edge_update": args.use_edge_update,
+        # DeePAW integration (optional)
+        "use_deepaw_features": args.use_deepaw_features,
+        "deepaw_checkpoint": args.deepaw_checkpoint if args.use_deepaw_features else None,
+        "deepaw_fusion": args.deepaw_fusion if args.use_deepaw_features else None,
         "batch_size": args.batch_size,
         "epochs": args.epochs,
         "lr": args.lr,
