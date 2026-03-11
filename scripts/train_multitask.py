@@ -64,6 +64,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--n-rbf", type=int, default=64, help="Number of RBF basis functions")
     parser.add_argument("--use-angles", action="store_true", help="Use angle features (for enhanced_graph)")
     parser.add_argument("--use-edge-update", action="store_true", help="Use edge update (for enhanced_graph)")
+    # DeePAW integration
+    parser.add_argument("--use-deepaw-features", action="store_true", help="Use DeePAW pretrained atom features")
+    parser.add_argument(
+        "--deepaw-checkpoint",
+        type=str,
+        default="/home/sutianhao/data/deepaw_test/DeePAW-main/checkpoints/f_nonlocal_escn_best.pth",
+        help="Path to DeePAW checkpoint",
+    )
+    parser.add_argument(
+        "--deepaw-fusion",
+        type=str,
+        default="add",
+        choices=["add", "concat"],
+        help="How to fuse DeePAW features with atom embeddings",
+    )
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--lr", type=float, default=3e-4)
@@ -214,7 +229,8 @@ def main() -> None:
         # PyG dataset doesn't need sampler - data is already in memory
         sampler = None
 
-    elif args.backbone == "enhanced_graph" and args.use_angles:
+    elif args.backbone == "enhanced_graph" and (args.use_angles or args.use_deepaw_features):
+        # Use EnhancedGraphDataset for angles or DeePAW features
         dataset_cls = EnhancedGraphDataset
         collate_fn = collate_enhanced_graph_samples
         dataset_kwargs = {
@@ -326,6 +342,9 @@ def main() -> None:
         n_rbf=args.n_rbf,
         use_angles=args.use_angles,
         use_edge_update=args.use_edge_update,
+        use_deepaw_features=args.use_deepaw_features,
+        deepaw_checkpoint=args.deepaw_checkpoint if args.use_deepaw_features else None,
+        deepaw_fusion=args.deepaw_fusion,
         head_variant=args.head_variant,
     )
 

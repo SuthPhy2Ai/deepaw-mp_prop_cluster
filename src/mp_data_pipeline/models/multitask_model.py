@@ -32,6 +32,9 @@ class MultitaskPropertyModel(nn.Module):
         dropout: float = 0.1,
         use_angles: bool = False,
         use_edge_update: bool = False,
+        use_deepaw_features: bool = False,
+        deepaw_checkpoint: str = None,
+        deepaw_fusion: str = "add",
         head_variant: str = "grouped",
     ):
         super().__init__()
@@ -53,6 +56,9 @@ class MultitaskPropertyModel(nn.Module):
                 n_rbf=n_rbf,
                 use_angles=use_angles,
                 use_edge_update=use_edge_update,
+                use_deepaw_features=use_deepaw_features,
+                deepaw_checkpoint=deepaw_checkpoint,
+                deepaw_fusion=deepaw_fusion,
             )
         elif backbone_name == "graph_enhanced":
             # Alias: use enhanced backbone with graph data loading
