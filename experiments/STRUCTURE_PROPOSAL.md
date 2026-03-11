@@ -70,7 +70,7 @@ Modify `experiment_manager.py` to support stage-aware operations.
 
 ### Step 4: Update Documentation
 Update all references to new structure in:
-- PHASE2_QUICKSTART.md
+- docs/guides/PHASE2_QUICKSTART.md
 - PHASE2_TRAINING_PLAN.md
 - experiments/README.md
 

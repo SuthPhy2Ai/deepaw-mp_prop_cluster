@@ -55,8 +55,8 @@ experiments/
 - ✅ `experiments/EXPERIMENTS.md` - Added stage-aware tracking
 - ✅ `experiments/stage_a/summary.md` - Created Stage A summary
 - ✅ `experiments/stage_b/summary.md` - Created Stage B summary
-- ✅ `PHASE2_QUICKSTART.md` - Updated all paths
-- ✅ `PHASE1_PHASE2_CHECKLIST.md` - Updated all paths
+- ✅ `docs/guides/PHASE2_QUICKSTART.md` - Updated all paths
+- ✅ `docs/project_status/PHASE1_PHASE2_CHECKLIST.md` - Updated all paths
 - ✅ `reports/PHASE2_TRAINING_PLAN.md` - Updated all paths
 
 ### Directory Migration

@@ -74,7 +74,7 @@
 - `reports/EXP01_PROGRESS.md` - EXP-01进度报告
 - `reports/TRAINING_STARTED.md` - 训练启动记录
 - `reports/AUTOMATION_STATUS.md` - 自动化状态
-- `README_STATUS.md` - 项目状态概览
+- `docs/project_status/README_STATUS.md` - 项目状态概览
 
 ### 日志文件
 - `logs/exp01_composition_baseline.log` - EXP-01训练日志
@@ -137,7 +137,7 @@ cat reports/phase1_execution_log.md
 ### 关键文件
 - `reports/PHASE1_STATUS.md` - 最新状态总结
 - `reports/phase1_execution_log.md` - 详细时间线
-- `README_STATUS.md` - 项目概览
+- `docs/project_status/README_STATUS.md` - 项目概览
 
 ---
 

@@ -126,7 +126,7 @@ All Stage A tasks plus:
 - **Stage A Summary**: `stage_a/summary.md`
 - **Stage B Summary**: `stage_b/summary.md`
 - **Phase 2 Plan**: `../reports/PHASE2_TRAINING_PLAN.md`
-- **Quick Start Guide**: `../PHASE2_QUICKSTART.md`
+- **Quick Start Guide**: `../docs/guides/PHASE2_QUICKSTART.md`
 - **Experiment Tracking**: `EXPERIMENTS.md`
 
 ## Best Practices

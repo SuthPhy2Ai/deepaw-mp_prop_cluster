@@ -12,7 +12,7 @@ Materials Project (MP) data pipeline with two main capabilities:
 **Pre-downloaded Dataset**: `data/raw/summary_all_merged.jsonl.gz` (280MB compressed) contains ~155k materials with complete structural, energetic, electronic, and elastic properties. Use this to avoid API calls.
 
 **Current Status**:
-- ✅ Phase 1 (Stage A baseline): Completed (see [PHASE1_DONE.txt](PHASE1_DONE.txt))
+- ✅ Phase 1 (Stage A baseline): Completed (see [docs/project_status/PHASE1_DONE.txt](docs/project_status/PHASE1_DONE.txt))
 - ✅ Phase 3 (Stage B baseline): Completed - exp101_baseline_graph trained on all 18 tasks
 - ✅ Academic paper: Comprehensive research paper written (see [reports/academic_paper.md](reports/academic_paper.md))
 - 🚀 Phase 2 enhanced graph backbone implementation ready for experimentation

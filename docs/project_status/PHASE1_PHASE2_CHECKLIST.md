@@ -49,7 +49,7 @@
 ### 文档
 - [x] PHASE1_FINAL_SUMMARY.md - Phase 1 总结
 - [x] PHASE2_TRAINING_PLAN.md - Phase 2 详细计划
-- [x] PHASE2_QUICKSTART.md - 快速启动指南
+- [x] docs/guides/PHASE2_QUICKSTART.md - 快速启动指南
 - [x] experiments/EXPERIMENTS.md - 实验追踪表
 - [x] experiments/README.md - 目录说明
 
@@ -158,7 +158,7 @@ reports/
 ├── PHASE1_FINAL_SUMMARY.md      # Phase 1 总结
 └── PHASE2_TRAINING_PLAN.md      # Phase 2 计划
 
-PHASE2_QUICKSTART.md             # 快速启动指南
+docs/guides/PHASE2_QUICKSTART.md             # 快速启动指南
 
 experiments/
 ├── EXPERIMENTS.md               # 实验追踪表

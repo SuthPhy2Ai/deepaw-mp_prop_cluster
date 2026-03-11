@@ -125,8 +125,8 @@ python scripts/eval_multitask.py \
 │   └── exp005_full_stack.json
 │
 ├── logs/                              # 应用日志
-├── PHASE1_PHASE2_CHECKLIST.md         # Phase 1→2 过渡清单
-├── PHASE2_QUICKSTART.md               # Phase 2 快速启动指南
+├── docs/project_status/PHASE1_PHASE2_CHECKLIST.md  # Phase 1→2 过渡清单
+├── docs/guides/PHASE2_QUICKSTART.md                # Phase 2 快速启动指南
 ├── CLAUDE.md                          # Claude Code 项目指南
 ├── README.md                          # 本文件
 └── requirements.txt
@@ -194,7 +194,7 @@ python scripts/eval_multitask.py \
 
 **配置文件**：`configs/exp002-005_*.json`
 **详细计划**：`reports/PHASE2_TRAINING_PLAN.md`
-**快速启动**：`PHASE2_QUICKSTART.md`
+**快速启动**：`docs/guides/PHASE2_QUICKSTART.md`
 
 ---
 
@@ -366,8 +366,8 @@ python scripts/store_to_ase.py
 - **Phase 1 完整报告**：`reports/PHASE1_COMPLETE_REPORT.md`
 - **Phase 1 最终总结**：`reports/PHASE1_FINAL_SUMMARY.md`
 - **Phase 2 训练计划**：`reports/PHASE2_TRAINING_PLAN.md`
-- **Phase 2 快速启动**：`PHASE2_QUICKSTART.md`
-- **Phase 1→2 清单**：`PHASE1_PHASE2_CHECKLIST.md`
+- **Phase 2 快速启动**：`docs/guides/PHASE2_QUICKSTART.md`
+- **Phase 1→2 清单**：`docs/project_status/PHASE1_PHASE2_CHECKLIST.md`
 - **Claude Code 指南**：`CLAUDE.md`
 
 ---
@@ -379,4 +379,4 @@ python scripts/store_to_ase.py
 3. 🚀 启动 Phase 2 实验（exp002-005）
 4. 📋 Phase 3 Stage B 训练（未来）
 
-**立即开始 Phase 2**：参见 `PHASE2_QUICKSTART.md`
+**立即开始 Phase 2**：参见 `docs/guides/PHASE2_QUICKSTART.md`
