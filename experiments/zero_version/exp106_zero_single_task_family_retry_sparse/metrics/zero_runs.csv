@@ -1,0 +1,3 @@
+task,train_samples,hidden_dim,layers,batch_size,epochs,lr,no_amp,status,run_dir,best_epoch,best_val_loss,val_primary_metric
+homogeneous_poisson,9752,128,4,32,90,8e-05,True,completed,artifacts/runs_zero_retry_sparse/homogeneous_poisson/20260309_132811,22,0.0015998720114029864,0.049809928983449936
+universal_anisotropy,9057,128,4,32,90,8e-05,True,completed,artifacts/runs_zero_retry_sparse/universal_anisotropy/20260309_140536,30,0.7314344132238295,1.8494423627853394

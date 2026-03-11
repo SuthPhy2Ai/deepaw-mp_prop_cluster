@@ -1,0 +1,16 @@
+task,train_samples,hidden_dim,layers,batch_size,epochs,lr,status,run_dir,best_epoch,best_val_loss,val_primary_metric,retry_recovered,no_amp,recovery_experiment
+energy_per_atom,123902,256,6,64,50,0.0001,completed,artifacts/runs_zero/energy_per_atom/20260308_193626,47,0.19835766561432552,0.2761683762073517,False,False,
+formation_energy_per_atom,123902,256,6,64,50,0.0001,completed,artifacts/runs_zero/formation_energy_per_atom/20260308_200735,50,0.002403825688271196,0.03302862495183945,False,False,
+energy_above_hull,123902,256,6,64,50,0.0001,completed,artifacts/runs_zero/energy_above_hull/20260308_203846,45,0.002681239287754158,0.030749579891562462,False,False,
+band_gap,123902,256,6,64,50,0.0001,completed,artifacts/runs_zero/band_gap/20260308_210954,37,0.08684678311355812,0.22516441345214844,False,False,
+cbm,71574,224,6,64,55,0.0001,completed,artifacts/runs_zero/cbm/20260308_214108,47,0.09140024963027436,0.2835765480995178,False,False,
+vbm,71574,224,6,64,55,0.0001,completed,artifacts/runs_zero/vbm/20260308_221320,48,0.07370690971657488,0.2481788992881775,False,False,
+efermi,123856,256,6,64,50,0.0001,completed,artifacts/runs_zero/efermi/20260308_224533,33,0.17120369585338702,0.38483062386512756,False,False,
+is_metal,123902,256,6,64,50,0.0001,completed,artifacts/runs_zero/is_metal/20260308_231645,14,0.284539356758464,0.9498290624002461,False,False,
+is_stable,123902,256,6,64,50,0.0001,completed,artifacts/runs_zero/is_stable/20260308_234757,12,0.3171593009394186,0.9055923011870575,False,False,
+volume,123890,320,7,32,70,8e-05,completed,artifacts/runs_zero/volume/20260309_001909,65,144.99676864403338,145.49745178222656,False,False,
+density,123902,320,7,32,70,8e-05,completed,artifacts/runs_zero/density/20260309_013312,70,0.0011140071016085085,0.018996872007846832,False,False,
+bulk_modulus_vrh,10217,160,4,32,80,0.0002,completed,artifacts/runs_zero/bulk_modulus_vrh/20260309_024714,65,4.596579497913139,8.910567283630371,False,False,
+shear_modulus_vrh,9685,160,4,32,80,0.0002,completed,artifacts/runs_zero/shear_modulus_vrh/20260309_032534,52,5.476928805831681,11.747057914733887,False,False,
+homogeneous_poisson,9752,128,4,32,90,8e-05,completed,artifacts/runs_zero_retry_sparse/homogeneous_poisson/20260309_132811,22,0.0015998720114029864,0.049809928983449936,True,True,experiments/zero_version/exp106_zero_single_task_family_retry_sparse
+universal_anisotropy,9057,128,4,32,90,8e-05,completed,artifacts/runs_zero_retry_sparse/universal_anisotropy/20260309_140536,30,0.7314344132238295,1.8494423627853394,True,True,experiments/zero_version/exp106_zero_single_task_family_retry_sparse

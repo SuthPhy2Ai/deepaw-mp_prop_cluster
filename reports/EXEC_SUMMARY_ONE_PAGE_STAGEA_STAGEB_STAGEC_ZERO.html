@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <title>老板看的一页执行摘要</title>
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 8mm;
+    }
+    body {
+      font-family: "Noto Sans CJK SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+      color: #172121;
+      background: #f8f6f1;
+      margin: 0;
+      font-size: 9.2pt;
+      line-height: 1.25;
+    }
+    .page {
+      height: 100%;
+      box-sizing: border-box;
+      padding: 8mm 9mm 7mm 9mm;
+      background:
+        radial-gradient(circle at top right, rgba(40,122,106,.08), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(186,82,34,.08), transparent 24%),
+        #f8f6f1;
+    }
+    .header {
+      display: grid;
+      grid-template-columns: 1.3fr .9fr;
+      gap: 10px;
+      align-items: start;
+      margin-bottom: 8px;
+    }
+    .title {
+      font-size: 22pt;
+      font-weight: 800;
+      letter-spacing: .3px;
+      margin: 0 0 3px 0;
+      color: #16302b;
+    }
+    .subtitle {
+      margin: 0;
+      color: #4a5856;
+      font-size: 9pt;
+    }
+    .hero {
+      background: linear-gradient(135deg, #173f35, #245b4f);
+      color: white;
+      border-radius: 10px;
+      padding: 10px 12px;
+    }
+    .hero p {
+      margin: 0;
+      font-size: 10pt;
+      line-height: 1.35;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1.12fr .88fr .9fr;
+      gap: 9px;
+      align-items: start;
+    }
+    .card {
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(22, 48, 43, .10);
+      border-radius: 10px;
+      padding: 8px 9px;
+    }
+    h2 {
+      margin: 0 0 6px 0;
+      font-size: 11pt;
+      color: #173f35;
+      border-bottom: 1px solid rgba(23, 63, 53, .12);
+      padding-bottom: 3px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.1pt;
+    }
+    th, td {
+      border-bottom: 1px solid rgba(23, 63, 53, .10);
+      text-align: left;
+      vertical-align: top;
+      padding: 3px 4px;
+    }
+    th {
+      color: #173f35;
+      font-weight: 700;
+      background: rgba(23, 63, 53, .04);
+    }
+    .small {
+      font-size: 7.7pt;
+      color: #5a6664;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 8pt;
+      margin-right: 5px;
+      margin-bottom: 4px;
+    }
+    .b-red { background: #f5d7d2; color: #8f2d18; }
+    .b-green { background: #dbece4; color: #1d5a48; }
+    .b-gold { background: #f2e6c9; color: #7c5a15; }
+    .b-gray { background: #e8ecec; color: #516160; }
+    ul, ol {
+      margin: 5px 0 0 18px;
+      padding: 0;
+    }
+    li {
+      margin: 2px 0;
+    }
+    .footer {
+      margin-top: 8px;
+      font-size: 7.8pt;
+      color: #546260;
+      display: flex;
+      justify-content: space-between;
+    }
+    code {
+      font-family: "DejaVu Sans Mono", monospace;
+      font-size: 7.9pt;
+      background: rgba(23, 63, 53, .06);
+      padding: 1px 3px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div>
+        <h1 class="title">老板看的一页执行摘要</h1>
+        <p class="subtitle">覆盖 Stage A / Stage A PyG / Stage B v1-v4 / Stage C h1-h2-hybrid / zero，统一按任务级 R2/ACC 横向比较。</p>
+      </div>
+      <div class="hero">
+        <p><strong>一句话结论：</strong>当前不应押单一路线，而应采用 <strong>zero + Stage A体系 + v2/v4</strong> 的组合。<strong>zero</strong> 提供热力学/稳定性/结构上限，<strong>Stage A体系（Stage A + Stage A PyG）</strong> 负责电子结构，<strong>v2/v4</strong> 负责稀疏弹性补位。</p>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>1. 决策结论</h2>
+        <div>
+          <span class="badge b-red">优先推进: zero</span>
+          <span class="badge b-green">保留主线: Stage A</span>
+          <span class="badge b-gray">保留参考: Stage A PyG</span>
+          <span class="badge b-gold">弹性补位: v2 / v4</span>
+        </div>
+        <table><thead><tr><th>动作</th><th>方法</th><th>理由</th></tr></thead><tbody><tr><td>优先推进</td><td>zero</td><td>15/15 已覆盖，热力学/稳定性/结构整体最强。</td></tr><tr><td>保留主线</td><td>Stage A</td><td>原始多任务主线，cbm/efermi/test band_gap 仍强。</td></tr><tr><td>保留参考</td><td>Stage A PyG</td><td>band_gap/vbm/is_metal 有局部提升，但未改写全局格局。</td></tr><tr><td>保留补位</td><td>v2 / v4</td><td>稀疏弹性任务仍需任务特化路线。</td></tr><tr><td>观察</td><td>Stage C hybrid</td><td>只在 val universal_anisotropy 给出局部最优信号。</td></tr><tr><td>暂停</td><td>v1 / v3 / Stage C h1/h2</td><td>当前没有形成主线竞争力。</td></tr></tbody></table>
+        <p class="small">解释口径：<code>best_val_loss</code> 只用于训练过程参考，不用于跨方法主结论。</p>
+      </div>
+
+      <div class="card">
+        <h2>2. 关键数字</h2>
+        <table><thead><tr><th>对象</th><th>VAL 胜场</th><th>TEST 胜场</th><th>解读</th></tr></thead><tbody><tr><td>zero</td><td>6</td><td>6</td><td>全局最强单方法</td></tr><tr><td>Stage A体系（Stage A + Stage A PyG）</td><td>5</td><td>5</td><td>电子结构簇主导家族</td></tr><tr><td>v2</td><td>3</td><td>1</td><td>弹性共享路线补位</td></tr><tr><td>v4</td><td>0</td><td>2</td><td>弹性单任务补位</td></tr><tr><td>Stage C hybrid</td><td>1</td><td>0</td><td>局部信号</td></tr></tbody></table>
+        <h2 style="margin-top:7px;">3. 最难任务</h2>
+        <table><thead><tr><th>Split</th><th>Task</th><th>最好方法</th><th>最好分数</th></tr></thead><tbody><tr><td>VAL</td><td>homogeneous_poisson</td><td>v2</td><td>0.1789</td></tr><tr><td>VAL</td><td>universal_anisotropy</td><td>Stage C hybrid</td><td>0.3660</td></tr><tr><td>VAL</td><td>volume</td><td>zero</td><td>0.6904</td></tr><tr><td>VAL</td><td>shear_modulus_vrh</td><td>v2</td><td>0.6928</td></tr><tr><td>TEST</td><td>homogeneous_poisson</td><td>v4</td><td>0.2336</td></tr><tr><td>TEST</td><td>universal_anisotropy</td><td>v4</td><td>0.3790</td></tr><tr><td>TEST</td><td>volume</td><td>zero</td><td>0.6746</td></tr><tr><td>TEST</td><td>shear_modulus_vrh</td><td>v1</td><td>0.7312</td></tr></tbody></table>
+      </div>
+
+      <div class="card">
+        <h2>4. 任务簇归属</h2>
+        <table><thead><tr><th>任务簇</th><th>VAL 最优</th><th>TEST 最优</th></tr></thead><tbody><tr><td>热力学</td><td>energy_above_hull-&gt;zero, energy_per_atom-&gt;zero, formation_energy_per_atom-&gt;zero</td><td>energy_above_hull-&gt;zero, energy_per_atom-&gt;zero, formation_energy_per_atom-&gt;zero</td></tr><tr><td>电子结构</td><td>band_gap-&gt;Stage A PyG, cbm-&gt;Stage A, efermi-&gt;Stage A, is_metal-&gt;Stage A PyG, vbm-&gt;Stage A PyG</td><td>band_gap-&gt;Stage A, cbm-&gt;Stage A, efermi-&gt;Stage A, is_metal-&gt;Stage A, vbm-&gt;Stage A PyG</td></tr><tr><td>稳定性</td><td>is_stable-&gt;zero</td><td>is_stable-&gt;zero</td></tr><tr><td>结构</td><td>density-&gt;zero, volume-&gt;zero</td><td>density-&gt;zero, volume-&gt;zero</td></tr><tr><td>弹性</td><td>bulk_modulus_vrh-&gt;v2, homogeneous_poisson-&gt;v2, shear_modulus_vrh-&gt;v2, universal_anisotropy-&gt;Stage C hybrid</td><td>bulk_modulus_vrh-&gt;v2, homogeneous_poisson-&gt;v4, shear_modulus_vrh-&gt;v1, universal_anisotropy-&gt;v4</td></tr></tbody></table>
+        <h2 style="margin-top:7px;">5. 立即执行</h2>
+        <ol>
+          <li>把 zero 作为下一轮主增长点，继续围绕热力学/稳定性/结构做容量与数据配比优化。</li>
+          <li>保留 Stage A体系（Stage A + Stage A PyG） 电子结构主线，不要把 band_gap/cbm/vbm/efermi/is_metal 迁出共享主干。</li>
+          <li>弹性路线继续分治，保留 v2/v4；Stage C 只留 hybrid 做解冻 backbone 的下一轮验证。</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div>完整报告：<code>reports/MASTER_COMPLETE_REPORT_STAGEA_STAGEB_STAGEC_ZERO.md</code></div>
+      <div>生成时间：2026-03-10</div>
+    </div>
+  </div>
+</body>
+</html>

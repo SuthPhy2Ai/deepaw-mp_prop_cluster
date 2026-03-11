@@ -1,0 +1,2 @@
+task,status,run_dir,best_epoch,best_val_loss,val_primary_metric,train_primary_metric
+energy_per_atom,completed,artifacts/runs_stageb_v4_smoke/energy_per_atom/20260308_081249,1,1.5881808738124148,1.8893156051635742,1.7856703996658325

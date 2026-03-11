@@ -1,0 +1,7 @@
+mp-api>=0.41
+ase>=3.22
+pymatgen>=2024.1
+numpy
+tqdm
+torch>=2.2
+scikit-learn>=1.3

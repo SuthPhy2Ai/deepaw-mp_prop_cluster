@@ -1,0 +1,35 @@
+{
+  "experiment_id": "exp107",
+  "experiment_name": "stagec_h1_electronic_hier",
+  "description": "Electronic hierarchical head: group head -> task heads for band tasks",
+  "phase": "stage_c",
+  "base_checkpoint": "artifacts/runs_stageb_v3/20260308_070539/checkpoints/best.pt",
+  "model": {
+    "backbone": "graph",
+    "head_variant": "stagec_h1",
+    "hidden_dim": 256,
+    "layers": 6,
+    "cutoff": 6.0,
+    "max_neighbors": 24,
+    "n_rbf": 64,
+    "use_pyg": true,
+    "freeze_backbone": true
+  },
+  "training": {
+    "split": "data/splits/split_iid_seed42.json",
+    "stage": "b",
+    "batch_size": 64,
+    "num_workers": 4,
+    "epochs": 35,
+    "lr": 0.0002,
+    "weight_decay": 1e-05,
+    "warmup_epochs": 5,
+    "grad_clip": 1.0,
+    "device": "cuda"
+  },
+  "isolation": {
+    "experiment_dir": "experiments/stage_c/phase1_head_variants/exp107_stagec_h1_electronic_hier",
+    "runs_root": "artifacts/runs_stagec_h1",
+    "log_file": "experiments/stage_c/phase1_head_variants/exp107_stagec_h1_electronic_hier/logs/train.log"
+  }
+}

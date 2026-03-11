@@ -1,0 +1,47 @@
+{
+  "experiment_id": "exp104",
+  "experiment_name": "stageb_v4_single_task_heads",
+  "description": "Stage B v4: shared pretrained backbone + isolated single-task head fine-tuning",
+  "phase": 4,
+  "base_checkpoint": "artifacts/runs_stageb_v3/20260308_070539/checkpoints/best.pt",
+  "model": {
+    "backbone": "graph",
+    "hidden_dim": 256,
+    "layers": 6,
+    "cutoff": 6.0,
+    "max_neighbors": 24,
+    "use_pyg": true,
+    "freeze_backbone": true
+  },
+  "training": {
+    "split": "data/splits/split_iid_seed42.json",
+    "stage": "b",
+    "batch_size": 64,
+    "num_workers": 4,
+    "epochs": 30,
+    "lr": 0.0002,
+    "weight_decay": 1e-5,
+    "device": "cuda"
+  },
+  "isolation": {
+    "experiment_dir": "experiments/stage_b/phase4_single_task/exp104_stageb_v4_single_task_heads",
+    "runs_root": "artifacts/runs_stageb_v4",
+    "per_task_run_root": "artifacts/runs_stageb_v4/<task>/<run_id>",
+    "per_task_log": "experiments/stage_b/phase4_single_task/exp104_stageb_v4_single_task_heads/logs/<task>.log"
+  },
+  "task_set": [
+    "energy_per_atom",
+    "formation_energy_per_atom",
+    "energy_above_hull",
+    "band_gap",
+    "cbm",
+    "vbm",
+    "efermi",
+    "is_metal",
+    "is_stable",
+    "bulk_modulus_vrh",
+    "shear_modulus_vrh",
+    "homogeneous_poisson",
+    "universal_anisotropy"
+  ]
+}

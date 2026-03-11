@@ -1,0 +1,62 @@
+{
+  "experiment_id": "exp101",
+  "experiment_name": "baseline_graph",
+  "description": "Stage B baseline with all 18 tasks including elastic properties",
+  "phase": 3,
+  "stage": "b",
+
+  "model": {
+    "backbone": "graph",
+    "hidden_dim": 256,
+    "layers": 6,
+    "cutoff": 6.0,
+    "max_neighbors": 24,
+    "n_rbf": 64,
+    "use_angles": false,
+    "use_edge_update": false
+  },
+
+  "training": {
+    "split": "data/splits/split_iid_seed42.json",
+    "stage": "b",
+    "batch_size": 64,
+    "num_workers": 8,
+    "epochs": 100,
+    "lr": 0.0002,
+    "weight_decay": 1e-5,
+    "grad_clip": 1.0,
+    "warmup_epochs": 5,
+    "dropout": 0,
+    "ema_decay": 0,
+    "early_stopping_patience": 0,
+    "oversample_elastic": 4.0
+  },
+
+  "data": {
+    "exclude_tasks": [],
+    "include_elastic": true
+  },
+
+  "changes_from_stage_a_baseline": [
+    "Stage A → Stage B: 8 tasks → 18 tasks",
+    "Added elastic properties (bulk_modulus_vrh, shear_modulus_vrh, etc.)",
+    "Added structural properties (volume, density)",
+    "Added stability classification (is_stable)",
+    "Weighted sampling with oversample_elastic=4.0 to balance low elastic coverage"
+  ],
+
+  "expected_outcomes": [
+    "Establish Stage B baseline performance",
+    "Understand elastic property prediction difficulty",
+    "Identify which tasks benefit from elastic data",
+    "Measure impact of task imbalance",
+    "Guide Stage B Phase 3 enhancements"
+  ],
+
+  "data_coverage": {
+    "total_materials": 154879,
+    "with_elastic": 10994,
+    "elastic_coverage": "7.1%",
+    "note": "Weighted sampling compensates for low elastic coverage"
+  }
+}

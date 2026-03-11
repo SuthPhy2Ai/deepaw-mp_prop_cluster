@@ -1,0 +1,14 @@
+task,status,run_dir,best_epoch,best_val_loss,val_primary_metric,train_primary_metric
+energy_per_atom,completed,artifacts/runs_stageb_v4/energy_per_atom/20260308_081747,30,1.4716288759219192,1.7430006265640259,1.6160856485366821
+formation_energy_per_atom,completed,artifacts/runs_stageb_v4/formation_energy_per_atom/20260308_082806,30,0.030701392105576576,0.15483583509922028,0.1491130292415619
+energy_above_hull,completed,artifacts/runs_stageb_v4/energy_above_hull/20260308_083825,30,0.0207222381903509,0.10073607414960861,0.09581273794174194
+band_gap,completed,artifacts/runs_stageb_v4/band_gap/20260308_084843,28,0.2594653444830328,0.4954078197479248,0.49187803268432617
+cbm,completed,artifacts/runs_stageb_v4/cbm/20260308_085901,28,0.2513402414639011,0.5644794702529907,0.5500354766845703
+vbm,completed,artifacts/runs_stageb_v4/vbm/20260308_090919,24,0.177352534722506,0.4504035413265228,0.4405692219734192
+efermi,completed,artifacts/runs_stageb_v4/efermi/20260308_091936,30,0.2747755739376072,0.5705662965774536,0.5669741630554199
+is_metal,completed,artifacts/runs_stageb_v4/is_metal/20260308_092955,29,0.3493315145250194,0.9202454010799752,0.9270871615731364
+is_stable,completed,artifacts/runs_stageb_v4/is_stable/20260308_094013,30,0.36428334877233615,0.866566120135011,0.8814857772530111
+bulk_modulus_vrh,failed(1),,,,,
+shear_modulus_vrh,failed(1),,,,,
+homogeneous_poisson,failed(1),,,,,
+universal_anisotropy,failed(1),,,,,

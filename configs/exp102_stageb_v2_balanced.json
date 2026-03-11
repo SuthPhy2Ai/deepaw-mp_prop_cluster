@@ -1,0 +1,39 @@
+{
+  "experiment_id": "exp102",
+  "experiment_name": "stageb_v2_balanced",
+  "description": "Stage B v2 with lower elastic oversampling to preserve Stage A core tasks",
+  "phase": 3,
+  "model": {
+    "backbone": "graph",
+    "hidden_dim": 256,
+    "layers": 6,
+    "cutoff": 6.0,
+    "max_neighbors": 24,
+    "n_rbf": 64,
+    "use_angles": false,
+    "use_edge_update": false,
+    "use_pyg": true
+  },
+  "training": {
+    "split": "data/splits/split_iid_seed42.json",
+    "stage": "b",
+    "batch_size": 64,
+    "num_workers": 4,
+    "epochs": 50,
+    "lr": 0.0001,
+    "weight_decay": 1e-5,
+    "grad_clip": 1.0,
+    "warmup_epochs": 5,
+    "oversample_elastic": 2.0,
+    "ema_decay": 0.0
+  },
+  "v2_changes": [
+    "oversample_elastic: 4.0 -> 2.0",
+    "keep stage=b task set (exclude volume/density by stage rule)",
+    "keep PyG backend for stable/fast pipeline"
+  ],
+  "hypothesis": [
+    "Reduce multi-task interference from elastic oversampling",
+    "Recover Stage A core task metrics while retaining elastic learnability"
+  ]
+}

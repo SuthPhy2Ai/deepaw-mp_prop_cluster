@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environments
+.venv/
+venv/
+env/
+.env
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Agent configs (local)
+.claude/
+
+# Logs / local outputs
+*.log
+logs/
+
+# Training artifacts (large)
+artifacts/
+
+# Large datasets / databases (keep only small metadata like splits)
+data/raw/
+data/db/
+data/checkpoints/
+data/cache/
+data/pyg_cache/
+
+# Experiment runtime outputs (keep configs/notes; ignore heavy outputs)
+experiments/**/tensorboard/
+experiments/**/training_log*.txt
+experiments/**/training_log*.log
+experiments/**/model_checkpoint.pt
+experiments/**/checkpoints/
+experiments/**/analysis/*.json
+experiments/**/analysis/*.png
+experiments/**/analysis/*.npy
+experiments/**/metrics/*.json
+experiments/**/metrics/*.png
+experiments/**/claude_evaluation/*.json
+experiments/**/claude_evaluation/*.png
+
+# Reports: keep markdown, drop generated heavy artifacts
+reports/**/*.json
+reports/**/*.png
+reports/**/figures/
+
+# Local reference code (not part of the core pipeline)
+refwork/
+
+# Scratch
+file
+
+# Model weights
+*.pt
+*.pth

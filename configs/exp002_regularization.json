@@ -1,0 +1,49 @@
+{
+  "experiment_id": "exp002",
+  "experiment_name": "regularization",
+  "description": "Enhanced regularization to reduce overfitting",
+  "phase": 2,
+
+  "model": {
+    "backbone": "graph",
+    "hidden_dim": 256,
+    "layers": 6,
+    "cutoff": 6.0,
+    "max_neighbors": 24,
+    "n_rbf": 64,
+    "use_angles": false,
+    "use_edge_update": false
+  },
+
+  "training": {
+    "split": "data/splits/split_iid_seed42.json",
+    "stage": "a",
+    "batch_size": 64,
+    "num_workers": 8,
+    "epochs": 100,
+    "lr": 5e-5,
+    "weight_decay": 0.0001,
+    "grad_clip": 1.0,
+    "warmup_epochs": 5,
+    "dropout": 0.1,
+    "ema_decay": 0,
+    "early_stopping_patience": 15
+  },
+
+  "data": {
+    "exclude_tasks": ["volume", "density", "is_stable"]
+  },
+
+  "changes_from_baseline": [
+    "Learning rate: 1e-4 → 5e-5 (more conservative)",
+    "Weight decay: 1e-5 → 1e-4 (10x stronger)",
+    "Added dropout: 0.1 in prediction heads",
+    "Early stopping: patience=15 epochs"
+  ],
+
+  "expected_outcomes": [
+    "Reduce train-val gap by 30-50%",
+    "Val loss < 0.22",
+    "Train-val gap < 0.05"
+  ]
+}

@@ -1,0 +1,21 @@
+python scripts/train_multitask.py \
+  --db /scratch/sutianhao/data/mp-data-pipeline/data/db/mp_materials.db \
+  --split data/splits/split_iid_seed42.json \
+  --stage a \
+  --exclude-tasks volume density is_stable \
+  --backbone graph \
+  --hidden-dim 256 \
+  --layers 6 \
+  --cutoff 6.0 \
+  --max-neighbors 24 \
+  --n-rbf 64 \
+  --batch-size 64 \
+  --epochs 50 \
+  --lr 0.0001 \
+  --weight-decay 1e-5 \
+  --num-workers 4 \
+  --warmup-epochs 5 \
+  --grad-clip 1.0 \
+  --device cuda \
+  --use-pyg \
+  --out-dir artifacts/runs_stagea_pyg

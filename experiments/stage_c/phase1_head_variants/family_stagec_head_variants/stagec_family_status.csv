@@ -1,0 +1,4 @@
+experiment_id,label,head_variant,status,run_dir,best_epoch,best_val_loss,experiment_dir
+exp107,Stage C h1,stagec_h1,completed,/scratch/sutianhao/data/mp-data-pipeline/artifacts/runs_stagec_h1/20260310_003913,35,27.33140021020716,experiments/stage_c/phase1_head_variants/exp107_stagec_h1_electronic_hier
+exp108,Stage C h2,stagec_h2,completed,/scratch/sutianhao/data/mp-data-pipeline/artifacts/runs_stagec_h2/20260310_005519,35,27.32634961555812,experiments/stage_c/phase1_head_variants/exp108_stagec_h2_elastic_derived
+exp109,Stage C hybrid,stagec_hybrid,completed,/scratch/sutianhao/data/mp-data-pipeline/artifacts/runs_stagec_hybrid/20260310_011108,30,27.32344178670694,experiments/stage_c/phase1_head_variants/exp109_stagec_hybrid_hier_combo

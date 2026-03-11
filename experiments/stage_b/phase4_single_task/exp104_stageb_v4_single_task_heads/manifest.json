@@ -1,0 +1,22 @@
+{
+  "created_at": "2026-03-08 08:17:37",
+  "base_checkpoint": "artifacts/runs_stageb_v3/20260308_070539/checkpoints/best.pt",
+  "split": "/scratch/sutianhao/data/mp-data-pipeline/data/splits/split_iid_seed42.json",
+  "runs_root": "artifacts/runs_stageb_v4",
+  "dry_run": false,
+  "tasks": [
+    "energy_per_atom",
+    "formation_energy_per_atom",
+    "energy_above_hull",
+    "band_gap",
+    "cbm",
+    "vbm",
+    "efermi",
+    "is_metal",
+    "is_stable",
+    "bulk_modulus_vrh",
+    "shear_modulus_vrh",
+    "homogeneous_poisson",
+    "universal_anisotropy"
+  ]
+}

@@ -1,0 +1,13 @@
+python scripts/train_multitask.py \
+  --split data/splits/split_iid_seed42.json \
+  --stage b \
+  --backbone graph \
+  --batch-size 64 \
+  --num-workers 4 \
+  --epochs 50 \
+  --lr 1e-4 \
+  --weight-decay 1e-5 \
+  --grad-clip 1.0 \
+  --warmup-epochs 5 \
+  --oversample-elastic 1.0 \
+  --out-dir artifacts/runs_stageb_v3

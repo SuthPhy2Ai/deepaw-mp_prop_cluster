@@ -1,0 +1,67 @@
+# v4 汇总对比报告
+
+## Run 概览
+
+| Version | Run | Best Val Loss | Best Epoch | 说明 |
+|---|---|---:|---:|---|
+| Stage A | `20260305_210307` | 0.9781 | 38 | 8-task baseline |
+| v1 | `20260307_185342` | 26.5616 | 42 | Stage B multitask |
+| v2 | `20260308_001437` | 26.9097 | 42 | Stage B balanced |
+| v3 | `20260308_070539` | 27.8843 | 38 | Stage B core guard |
+| v4 | `single-task` | N/A | N/A | shared backbone + per-task head |
+
+## Best Val Loss 直接横比
+
+| Version | Best Val Loss | 备注 |
+|---|---:|---|
+| Stage A | 0.9781 | 8-task multitask |
+| v1 | 26.5616 | 13-task multitask |
+| v2 | 26.9097 | 13-task multitask |
+| v3 | 27.8843 | 13-task multitask |
+| v4 avg | 1.2552 | 13 个单任务 `best_val_loss` 平均值 |
+| v4 min | 0.0021 | 单任务中最小 `best_val_loss` |
+| v4 max | 6.2637 | 单任务中最大 `best_val_loss` |
+
+## Val 主指标对比
+
+| Task | Metric | Better | Stage A | v1 | v2 | v3 | v4 | v4-v3 | Trend | v4-StageA | Trend |
+|---|---|---|---:|---:|---:|---:|---:|---:|---|---:|---|
+| energy_per_atom | mae | lower | 0.3606 | 1.7711 | 1.7583 | 1.8758 | 1.7430 | -0.1328 | improved | +1.3824 | degraded |
+| formation_energy_per_atom | mae | lower | 0.0800 | 0.2150 | 0.2137 | 0.2147 | 0.1548 | -0.0599 | improved | +0.0749 | degraded |
+| energy_above_hull | mae | lower | 0.0644 | 0.1225 | 0.1241 | 0.1220 | 0.1007 | -0.0212 | improved | +0.0363 | degraded |
+| band_gap | mae | lower | 0.2308 | 0.5402 | 0.5505 | 0.5507 | 0.4954 | -0.0553 | improved | +0.2646 | degraded |
+| cbm | mae | lower | 0.2921 | 0.5940 | 0.6060 | 0.6188 | 0.5645 | -0.0543 | improved | +0.2724 | degraded |
+| vbm | mae | lower | 0.2594 | 0.4770 | 0.4885 | 0.4935 | 0.4504 | -0.0431 | improved | +0.1910 | degraded |
+| efermi | mae | lower | 0.3834 | 0.6186 | 0.6257 | 0.6324 | 0.5706 | -0.0618 | improved | +0.1872 | degraded |
+| is_metal | auroc | higher | 0.9575 | 0.9029 | 0.9035 | 0.9056 | 0.9202 | +0.0147 | improved | -0.0373 | degraded |
+| is_stable | auroc | higher | N/A | 0.8389 | 0.8378 | 0.8335 | 0.8666 | +0.0330 | improved | N/A | N/A |
+| bulk_modulus_vrh | mae | lower | N/A | 8.3487 | 8.3024 | 8.5855 | 8.4485 | -0.1370 | improved | N/A | N/A |
+| shear_modulus_vrh | mae | lower | N/A | 10.3827 | 10.2219 | 10.6750 | 10.5170 | -0.1580 | improved | N/A | N/A |
+| homogeneous_poisson | mae | lower | N/A | 0.0423 | 0.0423 | 0.0441 | 0.0419 | -0.0023 | improved | N/A | N/A |
+| universal_anisotropy | mae | lower | N/A | 1.8196 | 1.8690 | 1.8657 | 1.8376 | -0.0281 | improved | N/A | N/A |
+
+## v4 单任务 Run 索引
+
+| Task | Run Dir | Best Epoch | Best Val Loss |
+|---|---|---:|---:|
+| energy_per_atom | `artifacts/runs_stageb_v4/energy_per_atom/20260308_081747` | 30 | 1.4716 |
+| formation_energy_per_atom | `artifacts/runs_stageb_v4/formation_energy_per_atom/20260308_082806` | 30 | 0.0307 |
+| energy_above_hull | `artifacts/runs_stageb_v4/energy_above_hull/20260308_083825` | 30 | 0.0207 |
+| band_gap | `artifacts/runs_stageb_v4/band_gap/20260308_084843` | 28 | 0.2595 |
+| cbm | `artifacts/runs_stageb_v4/cbm/20260308_085901` | 28 | 0.2513 |
+| vbm | `artifacts/runs_stageb_v4/vbm/20260308_090919` | 24 | 0.1774 |
+| efermi | `artifacts/runs_stageb_v4/efermi/20260308_091936` | 30 | 0.2748 |
+| is_metal | `artifacts/runs_stageb_v4/is_metal/20260308_092955` | 29 | 0.3493 |
+| is_stable | `artifacts/runs_stageb_v4/is_stable/20260308_094013` | 30 | 0.3643 |
+| bulk_modulus_vrh | `artifacts/runs_stageb_v4_retry_elastic/bulk_modulus_vrh/20260308_162533` | 17 | 5.8835 |
+| shear_modulus_vrh | `artifacts/runs_stageb_v4_retry_elastic/shear_modulus_vrh/20260308_163553` | 17 | 6.2637 |
+| homogeneous_poisson | `artifacts/runs_stageb_v4_retry_elastic/homogeneous_poisson/20260308_164612` | 9 | 0.0021 |
+| universal_anisotropy | `artifacts/runs_stageb_v4_retry_elastic/universal_anisotropy/20260308_165632` | 28 | 0.9685 |
+
+## 结论
+
+- 相比 v3：`improved=13`，`degraded=0`。
+- 相比 Stage A：`improved=0`，`degraded=8`，其余为 `N/A`。
+- v4 的单任务微调明显修复了稀疏弹性任务训练可用性，并在多数 Stage B 任务上优于 v3。
+- 若强行直接横比 `best_val_loss`：`Stage A=0.9781`，`v1=26.5616`，`v2=26.9097`，`v3=27.8843`，`v4(avg)=1.2552`。
+- 但这个横比只可作参考，因为 v4 是单任务目标，和多任务总损失不在同一口径。

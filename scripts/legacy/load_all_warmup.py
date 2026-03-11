@@ -1,0 +1,15 @@
+"""Compatibility wrapper for the unified JSONL loader."""
+
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+SRC_DIR = PROJECT_ROOT / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.insert(0, str(SRC_DIR))
+
+from mp_data_pipeline.load_from_jsonl import main
+
+
+if __name__ == "__main__":
+    main()

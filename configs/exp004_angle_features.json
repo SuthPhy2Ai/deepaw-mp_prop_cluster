@@ -1,0 +1,50 @@
+{
+  "experiment_id": "exp004",
+  "experiment_name": "angle_features",
+  "description": "Add angle features for three-body interactions",
+  "phase": 2,
+
+  "model": {
+    "backbone": "enhanced_graph",
+    "hidden_dim": 256,
+    "layers": 6,
+    "cutoff": 8.0,
+    "max_neighbors": 48,
+    "n_rbf": 128,
+    "use_angles": true,
+    "use_edge_update": false
+  },
+
+  "training": {
+    "split": "data/splits/split_iid_seed42.json",
+    "stage": "a",
+    "batch_size": 64,
+    "num_workers": 8,
+    "epochs": 100,
+    "lr": 0.0002,
+    "weight_decay": 1e-5,
+    "grad_clip": 5.0,
+    "warmup_epochs": 5,
+    "dropout": 0,
+    "ema_decay": 0,
+    "early_stopping_patience": 0
+  },
+
+  "data": {
+    "exclude_tasks": ["volume", "density", "is_stable"]
+  },
+
+  "changes_from_baseline": [
+    "Based on exp003 (enhanced_graph)",
+    "Added angle features (three-body interactions)",
+    "Captures angular information for better geometry understanding"
+  ],
+
+  "expected_outcomes": [
+    "Better structural property predictions",
+    "Improved band structure predictions",
+    "band_gap MAE < 0.20 eV",
+    "cbm/vbm MAE < 0.23 eV",
+    "Val loss < 0.20"
+  ]
+}

@@ -1,0 +1,5 @@
+task,status,run_dir,best_epoch,best_val_loss,val_primary_metric,train_primary_metric
+bulk_modulus_vrh,completed,artifacts/runs_stageb_v4_retry_elastic/bulk_modulus_vrh/20260308_162533,17,5.883500179002631,8.44847583770752,3.6196749210357666
+shear_modulus_vrh,completed,artifacts/runs_stageb_v4_retry_elastic/shear_modulus_vrh/20260308_163553,17,6.2637183853961655,10.517019271850586,5.419046878814697
+homogeneous_poisson,completed,artifacts/runs_stageb_v4_retry_elastic/homogeneous_poisson/20260308_164612,9,0.002066899923705038,0.04185211658477783,0.029334597289562225
+universal_anisotropy,completed,artifacts/runs_stageb_v4_retry_elastic/universal_anisotropy/20260308_165632,28,0.9684834310847582,1.8375552892684937,1.3834139108657837
