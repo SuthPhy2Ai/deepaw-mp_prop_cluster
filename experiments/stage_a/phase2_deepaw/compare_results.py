@@ -1,29 +1,45 @@
 #!/usr/bin/env python3
 """
-对比 DeePAW 实验与 baseline 的性能
+Compare DeePAW experiments vs baselines.
 
-Usage:
-    python experiments/stage_a/phase2_deepaw/compare_results.py
+This script is intentionally dependency-free (no pandas) and is resilient to
+different output layouts:
+
+- New layout (current train_multitask.py):
+  <OUT_DIR>/<RUN_ID>/metrics/best_summary.json
+- Legacy layout (older tools):
+  <OUT_DIR>/metrics.json
 """
 
+from __future__ import annotations
+
 import json
-import pandas as pd
-from pathlib import Path
 import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, Iterable, List, Optional, Tuple
 
-# 实验配置
-experiments = {
-    "EXP-01 (Composition)": "artifacts/runs/20260303_211013",
-    "EXP-02 (Graph)": "artifacts/runs/20260304_005923",
-    "EXP-201 (DeePAW Add)": "artifacts/runs_exp201",
-    "EXP-202 (DeePAW Concat)": "artifacts/runs_exp202",
-    "EXP-203 (DeePAW Angles)": "artifacts/runs_exp203",
-    "EXP-204 (DeePAW Long)": "artifacts/runs_exp204",
-    "EXP-205 (DeePAW LR1e4)": "artifacts/runs_exp205",
-}
 
-# 关键指标
-metrics = [
+@dataclass(frozen=True)
+class ExpSpec:
+    name: str
+    path: Path
+
+
+EXPERIMENTS: List[ExpSpec] = [
+    # Baselines (optional): update these if you want automatic comparisons.
+    ExpSpec("EXP-01 (Composition)", Path("artifacts/runs/20260303_211013")),
+    ExpSpec("EXP-02 (Graph)", Path("artifacts/runs/20260304_005923")),
+    # DeePAW runs (out-dir is a folder containing timestamp subruns).
+    ExpSpec("EXP-201 (DeePAW Add)", Path("artifacts/runs_exp201")),
+    ExpSpec("EXP-202 (DeePAW Concat)", Path("artifacts/runs_exp202")),
+    ExpSpec("EXP-203 (DeePAW Angles)", Path("artifacts/runs_exp203")),
+    ExpSpec("EXP-204 (DeePAW Long)", Path("artifacts/runs_exp204")),
+    ExpSpec("EXP-205 (DeePAW LR1e4)", Path("artifacts/runs_exp205")),
+]
+
+
+KEY_METRICS: List[str] = [
     "band_gap_mae",
     "cbm_mae",
     "vbm_mae",
@@ -34,149 +50,180 @@ metrics = [
     "energy_above_hull_mae",
 ]
 
-def load_metrics(exp_dir):
-    """加载实验指标"""
-    metrics_file = Path(exp_dir) / "metrics.json"
-    if not metrics_file.exists():
+
+TARGETS: Dict[str, float] = {
+    "band_gap_mae": 0.20,
+    "cbm_mae": 0.25,
+    "vbm_mae": 0.20,
+    "efermi_mae": 0.35,
+    "is_metal_auroc": 0.96,
+}
+
+
+def _find_latest_run_dir(out_dir: Path) -> Optional[Path]:
+    """Resolve <OUT_DIR> to the latest <OUT_DIR>/<RUN_ID> directory if needed."""
+    if not out_dir.exists():
         return None
 
-    with open(metrics_file) as f:
-        data = json.load(f)
+    # If it already looks like a run dir, accept.
+    if (out_dir / "metrics" / "best_summary.json").exists() or (out_dir / "metrics.json").exists():
+        return out_dir
 
-    # 提取验证集指标
-    if "val" in data:
-        return data["val"]
-    return data
+    # Otherwise pick the latest timestamp-like subdir.
+    candidates: List[Path] = []
+    for child in out_dir.iterdir():
+        if not child.is_dir():
+            continue
+        if (child / "metrics" / "best_summary.json").exists() or (child / "metrics.json").exists():
+            candidates.append(child)
 
-def main():
-    print("=" * 80)
-    print("DeePAW Experiments vs Baseline Comparison")
-    print("=" * 80)
-    print()
+    if not candidates:
+        return None
 
-    # 读取所有实验结果
-    results = {}
-    missing = []
+    # Timestamp run_ids sort lexicographically.
+    return sorted(candidates)[-1]
 
-    for exp_name, exp_dir in experiments.items():
-        metrics_data = load_metrics(exp_dir)
-        if metrics_data is not None:
-            results[exp_name] = metrics_data
-            print(f"✓ Loaded: {exp_name}")
+
+def _load_json(path: Path) -> Dict:
+    return json.loads(path.read_text())
+
+
+def load_val_metrics(out_dir: Path) -> Optional[Dict[str, float]]:
+    run_dir = _find_latest_run_dir(out_dir)
+    if run_dir is None:
+        return None
+
+    # Preferred new format.
+    best_summary = run_dir / "metrics" / "best_summary.json"
+    if best_summary.exists():
+        data = _load_json(best_summary)
+        # Convention: saved as {"val_loss":..., "val_metrics": {...}, ...}
+        if isinstance(data, dict) and "val_metrics" in data and isinstance(data["val_metrics"], dict):
+            return data["val_metrics"]
+        # Fallback: sometimes directly a metrics dict
+        if isinstance(data, dict):
+            return data
+
+    # Legacy fallback.
+    legacy = run_dir / "metrics.json"
+    if legacy.exists():
+        data = _load_json(legacy)
+        if isinstance(data, dict) and "val" in data and isinstance(data["val"], dict):
+            return data["val"]
+        if isinstance(data, dict):
+            return data
+
+    return None
+
+
+def _fmt(v: Optional[float]) -> str:
+    if v is None:
+        return "-"
+    try:
+        if v != v:  # NaN
+            return "nan"
+        return f"{v:.4f}"
+    except Exception:
+        return str(v)
+
+
+def _print_table(rows: List[Tuple[str, Dict[str, float]]], metrics: Iterable[str]) -> None:
+    metrics = list(metrics)
+    name_w = max(len(r[0]) for r in rows) if rows else 10
+    col_w = 14
+
+    header = ["Experiment".ljust(name_w)] + [m.ljust(col_w) for m in metrics]
+    print("  ".join(header))
+    print("-" * (len(header) * (col_w + 2)))
+
+    for name, m in rows:
+        line = [name.ljust(name_w)]
+        for k in metrics:
+            line.append(_fmt(m.get(k)).ljust(col_w))
+        print("  ".join(line))
+
+
+def _compute_improvements(
+    baseline: Dict[str, float],
+    current: Dict[str, float],
+    metrics: Iterable[str],
+) -> Dict[str, float]:
+    out: Dict[str, float] = {}
+    for metric in metrics:
+        if metric not in baseline or metric not in current:
+            continue
+        b = baseline[metric]
+        x = current[metric]
+        if b == 0:
+            continue
+        if "mae" in metric or "rmse" in metric or "loss" in metric:
+            out[metric] = (b - x) / b * 100.0
         else:
-            missing.append(exp_name)
-            print(f"✗ Missing: {exp_name}")
+            out[metric] = (x - b) / b * 100.0
+    return out
 
-    print()
 
-    if not results:
-        print("Error: No experiment results found!")
+def main() -> None:
+    print("=" * 80)
+    print("DeePAW Experiments vs Baseline Comparison (val metrics)")
+    print("=" * 80)
+
+    loaded: List[Tuple[str, Dict[str, float]]] = []
+    missing: List[str] = []
+
+    for spec in EXPERIMENTS:
+        m = load_val_metrics(spec.path)
+        if m is None:
+            missing.append(spec.name)
+            continue
+        loaded.append((spec.name, m))
+
+    if not loaded:
+        print("No experiment metrics found.")
+        print("Tip: run training first, then check the out dirs:")
+        for spec in EXPERIMENTS:
+            print(f"  - {spec.path}")
         sys.exit(1)
 
-    # 生成对比表格
-    print("=" * 80)
-    print("Performance Comparison (Validation Set)")
-    print("=" * 80)
-    print()
+    # Only keep metrics that exist in at least one experiment.
+    available = [k for k in KEY_METRICS if any(k in m for _, m in loaded)]
+    print("\nPerformance Table")
+    _print_table(loaded, available)
 
-    df = pd.DataFrame(results).T
-
-    # 只显示存在的指标
-    available_metrics = [m for m in metrics if m in df.columns]
-    print(df[available_metrics].to_string())
-    print()
-
-    # 计算改进百分比（相对于 Composition baseline）
-    if "EXP-01 (Composition)" in results:
-        baseline = results["EXP-01 (Composition)"]
-
-        print("=" * 80)
-        print("Improvement vs Composition Baseline (%)")
-        print("=" * 80)
-        print()
-
-        improvements = {}
-        for exp_name in results.keys():
-            if exp_name == "EXP-01 (Composition)":
+    # Improvements vs baseline if present.
+    baseline_name = "EXP-01 (Composition)"
+    baseline = next((m for n, m in loaded if n == baseline_name), None)
+    if baseline is not None:
+        print("\nImprovement vs Composition Baseline (%)")
+        improvements: List[Tuple[str, Dict[str, float]]] = []
+        for name, m in loaded:
+            if name == baseline_name:
                 continue
+            improvements.append((name, _compute_improvements(baseline, m, available)))
+        _print_table(improvements, available)
 
-            improvement = {}
-            for metric in available_metrics:
-                if metric not in baseline or metric not in results[exp_name]:
-                    continue
-
-                baseline_val = baseline[metric]
-                exp_val = results[exp_name][metric]
-
-                if "mae" in metric or "mse" in metric:
-                    # Lower is better
-                    improvement[metric] = (baseline_val - exp_val) / baseline_val * 100
-                else:  # AUROC, accuracy
-                    # Higher is better
-                    improvement[metric] = (exp_val - baseline_val) / baseline_val * 100
-
-            improvements[exp_name] = improvement
-
-        imp_df = pd.DataFrame(improvements).T
-        print(imp_df.to_string())
-        print()
-
-        # 高亮最佳改进
-        print("=" * 80)
-        print("Best Improvements")
-        print("=" * 80)
-        print()
-
-        for metric in available_metrics:
-            if metric in imp_df.columns:
-                best_exp = imp_df[metric].idxmax()
-                best_val = imp_df[metric].max()
-                print(f"{metric:30s}: {best_exp:25s} (+{best_val:6.2f}%)")
-        print()
-
-    # 检查是否达到目标
-    print("=" * 80)
-    print("Target Achievement Check")
-    print("=" * 80)
-    print()
-
-    targets = {
-        "band_gap_mae": 0.60,
-        "cbm_mae": 0.23,
-        "vbm_mae": 0.19,
-        "efermi_mae": 0.31,
-        "is_metal_auroc": 0.92,
-    }
-
-    for exp_name in results.keys():
-        if "DeePAW" not in exp_name:
+    # Target check for DeePAW experiments.
+    print("\nTarget Achievement Check")
+    for name, m in loaded:
+        if "DeePAW" not in name:
             continue
+        print(f"\n{name}:")
+        for metric, target in TARGETS.items():
+            if metric not in m:
+                continue
+            v = m[metric]
+            if "mae" in metric or "rmse" in metric or "loss" in metric:
+                ok = v < target
+                print(f"  [{'OK' if ok else 'NO'}] {metric}: {_fmt(v)} (target < {target})")
+            else:
+                ok = v > target
+                print(f"  [{'OK' if ok else 'NO'}] {metric}: {_fmt(v)} (target > {target})")
 
-        print(f"{exp_name}:")
-        for metric, target in targets.items():
-            if metric in results[exp_name]:
-                val = results[exp_name][metric]
-                if "mae" in metric:
-                    achieved = val < target
-                    symbol = "✓" if achieved else "✗"
-                    print(f"  {symbol} {metric:20s}: {val:.4f} (target: <{target:.2f})")
-                else:  # AUROC
-                    achieved = val > target
-                    symbol = "✓" if achieved else "✗"
-                    print(f"  {symbol} {metric:20s}: {val:.4f} (target: >{target:.2f})")
-        print()
-
-    # 缺失实验提示
     if missing:
-        print("=" * 80)
-        print("Missing Experiments")
-        print("=" * 80)
-        print()
-        for exp_name in missing:
-            print(f"  - {exp_name}")
-        print()
-        print("Run these experiments to complete the comparison.")
-        print()
+        print("\nMissing experiments (no metrics found):")
+        for name in missing:
+            print(f"  - {name}")
+
 
 if __name__ == "__main__":
     main()

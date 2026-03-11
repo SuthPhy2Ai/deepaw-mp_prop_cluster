@@ -81,13 +81,18 @@ python experiments/stage_a/phase2_deepaw/compare_results.py
 
 ## 预期改进目标
 
-| 任务 | Baseline (EXP-01) | 目标 (DeePAW) | 改进 |
+> 注意：本计划的“Baseline”以仓库当前的 Stage A 图基线（`exp001_baseline_graph`）
+> 里记录的验证集指标为准（见 `README.md` 的 *Stage A: Phase 1 baseline* 部分）。
+> 如果你要对比的是其他 run（例如 Composition baseline 或 Stage B 基线），请先把对比对象在
+> `compare_results.py` 里配置清楚，避免用错基线导致目标失真。
+
+| 任务 | Baseline (Stage A Graph) | 目标 (DeePAW) | 说明 |
 |------|-------------------|---------------|------|
-| band_gap | 0.715 eV | <0.60 eV | >16% |
-| cbm | 0.292 eV | <0.23 eV | >21% |
-| vbm | 0.235 eV | <0.19 eV | >19% |
-| efermi | 0.383 eV | <0.31 eV | >19% |
-| is_metal | 0.9098 AUROC | >0.92 | >1% |
+| band_gap | 0.2308 eV | <0.20 eV | 电子性质重点任务 |
+| cbm | 0.2921 eV | <0.25 eV | 电子性质重点任务 |
+| vbm | 0.2346 eV | <0.20 eV | 电子性质重点任务 |
+| efermi | 0.3834 eV | <0.35 eV | 电子性质重点任务 |
+| is_metal | 0.9575 AUROC | >0.960 | 分类任务，提升空间较小 |
 
 ## 文件结构
 
@@ -120,16 +125,17 @@ experiments/stage_b/phase2_deepaw/
 
 ## 输出目录
 
-训练结果将保存到：
+训练结果将保存到（注意：`--out-dir` 下会自动创建按时间戳命名的 run 子目录）：
 
 ```
 artifacts/
 ├── runs_exp201/          # EXP-201 结果
-│   ├── checkpoints/
-│   │   └── best.pt
-│   ├── config.json
-│   ├── metrics.json
-│   └── train.log
+│   └── <timestamp>/      # 例如 20260311_190000
+│       ├── checkpoints/best.pt
+│       ├── config.json
+│       ├── metrics/best_summary.json
+│       ├── metrics/history.json
+│       └── tensorboard/
 ├── runs_exp202/          # EXP-202 结果
 ├── runs_exp203/          # EXP-203 结果
 ├── runs_exp204/          # EXP-204 结果
@@ -152,7 +158,7 @@ python scripts/eval_multitask.py \
 ### 资源需求
 - **GPU 内存**: 每个实验约 6-8GB
 - **训练时间**: 单个实验 40-100 分钟
-- **总时间**: 全部实验约 9 小时
+- **总时间**: 全部实验约 6-9 小时（取决于是否已生成 PyG cache、以及 I/O/CPU 性能）
 
 ### 训练稳定性
 - 使用 `--no-amp` 避免混合精度问题
