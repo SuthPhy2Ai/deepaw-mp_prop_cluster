@@ -75,6 +75,16 @@ def _tail_progress(train_log: Path) -> Tuple[Optional[str], Optional[float]]:
     chunk = data[-400_000:]
     text = chunk.decode("utf-8", errors="ignore")
 
+    # Phase 0: target/mask preloading (ASE dataset).
+    m = None
+    for mm in re.finditer(r"Preloading:\s+\s*(\d+)/(\d+)", text):
+        m = mm
+    if m:
+        cur = int(m.group(1))
+        tot = int(m.group(2))
+        ratio = (cur / tot) if tot else None
+        return f"preload {cur}/{tot} ({ratio*100:.2f}%)", ratio
+
     # Phase 1: PyG conversion.
     m = None
     for mm in re.finditer(r"Converting to PyG:.*?\|\s+(\d+)/(\d+)\s+\[", text):
