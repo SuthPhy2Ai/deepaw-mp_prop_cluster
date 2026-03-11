@@ -12,7 +12,7 @@ echo "Backbone: enhanced_graph"
 echo "DeePAW Fusion: add"
 echo "Epochs: 50"
 echo "Learning Rate: 2e-4"
-echo "Batch Size: 64"
+echo "Batch Size: 16"
 echo "========================================="
 
 python scripts/train_multitask.py \
@@ -25,7 +25,7 @@ python scripts/train_multitask.py \
   --use-deepaw-features \
   --deepaw-checkpoint /home/sutianhao/data/deepaw_test/DeePAW-main/checkpoints/f_nonlocal_escn_best.pth \
   --deepaw-fusion add \
-  --batch-size 64 \
+  --batch-size 16 \
   --num-workers 8 \
   --exclude-tasks volume density is_stable \
   --epochs 50 \
