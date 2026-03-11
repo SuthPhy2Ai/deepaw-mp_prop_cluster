@@ -19,8 +19,8 @@ python scripts/train_multitask.py \
   --split data/splits/split_iid_seed42.json \
   --stage a \
   --backbone enhanced_graph \
-  --cutoff 8.0 \
-  --max-neighbors 48 \
+  --cutoff 6.0 \
+  --max-neighbors 24 \
   --n-rbf 128 \
   --use-deepaw-features \
   --deepaw-checkpoint /home/sutianhao/data/deepaw_test/DeePAW-main/checkpoints/f_nonlocal_escn_best.pth \
@@ -34,6 +34,7 @@ python scripts/train_multitask.py \
   --grad-clip 1.0 \
   --warmup-epochs 5 \
   --no-amp \
+  --no-pyg \
   --out-dir artifacts/runs_exp201
 
 echo "========================================="
