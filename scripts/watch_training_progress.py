@@ -127,12 +127,32 @@ def _tail_progress(train_log: Path) -> Tuple[Optional[str], Optional[float]]:
         ratio = (it / tot) if tot else None
         return f"train epoch={epoch} iter={it}/{tot} ({ratio*100:.2f}%)", ratio
 
+    # Phase 2b: training loop printed as tqdm bar "train:  10%|...| 740/7744 [..]"
+    m = None
+    for mm in re.finditer(r"train:\s+\s*\d+%.*?\|\s*(\d+)/(\d+)\s+\[", text):
+        m = mm
+    if m:
+        it = int(m.group(1))
+        tot = int(m.group(2))
+        ratio = (it / tot) if tot else None
+        return f"train iter={it}/{tot} ({ratio*100:.2f}%)", ratio
+
     # Phase 3: eval loops.
     m = None
     for mm in re.finditer(r"eval:\s+(\d+)%\|", text):
         m = mm
     if m:
         return "eval running", None
+
+    # Phase 3b: eval loop printed as tqdm bar "eval:  27%|...| 273/968 [..]"
+    m = None
+    for mm in re.finditer(r"eval:\s+\s*\d+%.*?\|\s*(\d+)/(\d+)\s+\[", text):
+        m = mm
+    if m:
+        cur = int(m.group(1))
+        tot = int(m.group(2))
+        ratio = (cur / tot) if tot else None
+        return f"eval {cur}/{tot} ({ratio*100:.2f}%)", ratio
 
     if _detect_finished(train_log):
         return "finished", 1.0
