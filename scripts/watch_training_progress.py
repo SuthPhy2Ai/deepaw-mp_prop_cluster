@@ -94,65 +94,80 @@ def _tail_progress(train_log: Path) -> Tuple[Optional[str], Optional[float]]:
     chunk = data[-400_000:]
     text = chunk.decode("utf-8", errors="ignore")
 
+    # We may see multiple progress phases (preload/train/eval) in the tail chunk.
+    # Choose the most recent one by match position to avoid getting "stuck" on
+    # an old preloading line while training is already running.
+    candidates: list[tuple[int, str, Optional[float]]] = []
+
+    def _add_last(pattern: str, fmt):
+        last = None
+        for mm in re.finditer(pattern, text):
+            last = mm
+        if not last:
+            return
+        msg, ratio = fmt(last)
+        candidates.append((last.start(), msg, ratio))
+
     # Phase 0: target/mask preloading (ASE dataset).
-    m = None
-    # tqdm format example:
-    # "Preloading:   7%|▋         | 8665/123903 [03:10<42:12, 45.53it/s]"
-    for mm in re.finditer(r"Preloading:.*?\|\s*(\d+)/(\d+)\s+\[", text):
-        m = mm
-    if m:
-        cur = int(m.group(1))
-        tot = int(m.group(2))
-        ratio = (cur / tot) if tot else None
-        return f"preload {cur}/{tot} ({ratio*100:.2f}%)", ratio
+    _add_last(
+        r"Preloading:.*?\|\s*(\d+)/(\d+)\s+\[",
+        lambda m: (
+            (lambda cur, tot: (f"preload {cur}/{tot} ({(cur/tot)*100:.2f}%)", (cur / tot) if tot else None))(
+                int(m.group(1)), int(m.group(2))
+            )
+        ),
+    )
 
     # Phase 1: PyG conversion.
-    m = None
-    for mm in re.finditer(r"Converting to PyG:.*?\|\s+(\d+)/(\d+)\s+\[", text):
-        m = mm
-    if m:
-        cur = int(m.group(1))
-        tot = int(m.group(2))
-        ratio = (cur / tot) if tot else None
-        return f"pyg_convert {cur}/{tot} ({ratio*100:.2f}%)", ratio
+    _add_last(
+        r"Converting to PyG:.*?\|\s+(\d+)/(\d+)\s+\[",
+        lambda m: (
+            (lambda cur, tot: (f"pyg_convert {cur}/{tot} ({(cur/tot)*100:.2f}%)", (cur / tot) if tot else None))(
+                int(m.group(1)), int(m.group(2))
+            )
+        ),
+    )
 
-    # Phase 2: training epoch iterations (printed by tqdm).
-    m = None
-    for mm in re.finditer(r"\[Epoch\s+(\d+)\s+Iter\s+(\d+)/(\d+)\]", text):
-        m = mm
-    if m:
-        epoch = int(m.group(1))
-        it = int(m.group(2))
-        tot = int(m.group(3))
-        ratio = (it / tot) if tot else None
-        return f"train epoch={epoch} iter={it}/{tot} ({ratio*100:.2f}%)", ratio
+    # Phase 2: training epoch iterations (custom log format).
+    _add_last(
+        r"\[Epoch\s+(\d+)\s+Iter\s+(\d+)/(\d+)\]",
+        lambda m: (
+            (lambda epoch, it, tot: (f"train epoch={epoch} iter={it}/{tot} ({(it/tot)*100:.2f}%)", (it / tot) if tot else None))(
+                int(m.group(1)), int(m.group(2)), int(m.group(3))
+            )
+        ),
+    )
 
     # Phase 2b: training loop printed as tqdm bar "train:  10%|...| 740/7744 [..]"
-    m = None
-    for mm in re.finditer(r"train:\s+\s*\d+%.*?\|\s*(\d+)/(\d+)\s+\[", text):
-        m = mm
-    if m:
-        it = int(m.group(1))
-        tot = int(m.group(2))
-        ratio = (it / tot) if tot else None
-        return f"train iter={it}/{tot} ({ratio*100:.2f}%)", ratio
+    _add_last(
+        r"train:\s+\s*\d+%.*?\|\s*(\d+)/(\d+)\s+\[",
+        lambda m: (
+            (lambda it, tot: (f"train iter={it}/{tot} ({(it/tot)*100:.2f}%)", (it / tot) if tot else None))(
+                int(m.group(1)), int(m.group(2))
+            )
+        ),
+    )
 
     # Phase 3: eval loops.
-    m = None
-    for mm in re.finditer(r"eval:\s+(\d+)%\|", text):
-        m = mm
-    if m:
-        return "eval running", None
+    _add_last(
+        r"eval:\s+(\d+)%\|",
+        lambda m: ("eval running", None),
+    )
 
     # Phase 3b: eval loop printed as tqdm bar "eval:  27%|...| 273/968 [..]"
-    m = None
-    for mm in re.finditer(r"eval:\s+\s*\d+%.*?\|\s*(\d+)/(\d+)\s+\[", text):
-        m = mm
-    if m:
-        cur = int(m.group(1))
-        tot = int(m.group(2))
-        ratio = (cur / tot) if tot else None
-        return f"eval {cur}/{tot} ({ratio*100:.2f}%)", ratio
+    _add_last(
+        r"eval:\s+\s*\d+%.*?\|\s*(\d+)/(\d+)\s+\[",
+        lambda m: (
+            (lambda cur, tot: (f"eval {cur}/{tot} ({(cur/tot)*100:.2f}%)", (cur / tot) if tot else None))(
+                int(m.group(1)), int(m.group(2))
+            )
+        ),
+    )
+
+    if candidates:
+        candidates.sort(key=lambda x: x[0])
+        _, msg, ratio = candidates[-1]
+        return msg, ratio
 
     if _detect_finished(train_log):
         return "finished", 1.0
