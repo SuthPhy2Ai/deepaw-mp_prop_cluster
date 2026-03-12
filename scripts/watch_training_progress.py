@@ -33,7 +33,9 @@ def _run(cmd: list[str]) -> str:
 
 def _find_pid(pattern: str) -> Optional[int]:
     try:
-        out = _run(["bash", "-lc", f"pgrep -af '{pattern}' || true"])
+        # Avoid `bash -lc pgrep ...` wrappers: they include the pattern string
+        # in their own argv and can get (incorrectly) matched by `pgrep -f`.
+        out = _run(["pgrep", "-af", pattern])
     except Exception:
         return None
     if not out:
@@ -55,9 +57,26 @@ def _find_pid(pattern: str) -> Optional[int]:
             continue
         if "watch_training_progress.py" in cmdline:
             continue
+        # Avoid false positives from helper processes.
+        if "pgrep -af" in cmdline or "pgrep -f" in cmdline:
+            continue
+        if "bash -lc" in cmdline and "pgrep" in cmdline:
+            continue
         return pid
 
     return None
+
+
+def _detect_finished(train_log: Path) -> bool:
+    if not train_log.exists():
+        return False
+    try:
+        data = train_log.read_bytes()
+    except Exception:
+        return False
+    chunk = data[-200_000:]
+    text = chunk.decode("utf-8", errors="ignore")
+    return ("Training completed!" in text) or ("Results saved to artifacts/runs_exp201" in text)
 
 
 def _tail_progress(train_log: Path) -> Tuple[Optional[str], Optional[float]]:
@@ -115,6 +134,9 @@ def _tail_progress(train_log: Path) -> Tuple[Optional[str], Optional[float]]:
     if m:
         return "eval running", None
 
+    if _detect_finished(train_log):
+        return "finished", 1.0
+
     return None, None
 
 
@@ -162,7 +184,8 @@ def main() -> int:
         progress_txt = progress_txt or "progress: <unknown>"
 
         if pid is None:
-            line = f"[WATCH {now}] status=stopped {progress_txt}\n"
+            status = "finished" if _detect_finished(args.train_log) else "stopped"
+            line = f"[WATCH {now}] status={status} {progress_txt}\n"
         else:
             ps = _ps_snapshot(pid)
             gpu = _gpu_snapshot()
