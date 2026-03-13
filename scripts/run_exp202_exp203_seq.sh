@@ -4,6 +4,9 @@ set -euo pipefail
 ROOT="/scratch/sutianhao/data/mp-data-pipeline"
 cd "${ROOT}"
 
+# Prevent ~/.local site-packages from shadowing the conda env (critical for PyG/torch ABI).
+export PYTHONNOUSERSITE=1
+
 ts() { date +"%Y%m%d_%H%M%S"; }
 
 rotate_log() {
@@ -58,4 +61,3 @@ run_one \
   "logs/exp203_watch_c6n24.log"
 
 echo "All done."
-

@@ -5,6 +5,9 @@
 
 set -e
 
+# Prevent ~/.local site-packages from shadowing the conda env (critical for PyG/torch ABI).
+export PYTHONNOUSERSITE=1
+
 echo "========================================="
 echo "EXP-203: DeePAW + Angles Training"
 echo "========================================="
