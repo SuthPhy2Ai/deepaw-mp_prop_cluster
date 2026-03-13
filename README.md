@@ -19,10 +19,28 @@ Materials Project (MP) 数据管道与多任务机器学习训练系统。
 
 ## 快速开始
 
+### 0. 环境配置
+
+**完整环境配置指南**: 参见 [SETUP.md](SETUP.md)
+
+**系统信息**:
+- 操作系统: Linux 5.14.0-284.30.1.el9_2.x86_64
+- 用户: sutianhao
+- 项目路径: `/scratch/sutianhao/data/mp-data-pipeline`
+- Conda 环境: `deepaw` (推荐) 或 `deepaw_test`
+
 ### 1. 安装依赖
 
 ```bash
+# 激活 conda 环境
+conda activate deepaw
+
+# 安装 Python 依赖
 pip install -r requirements.txt
+
+# 安装 PyTorch Geometric (如果未安装)
+pip install torch-geometric
+pip install torch-scatter torch-sparse torch-cluster -f https://data.pyg.org/whl/torch-2.2.0+cu118.html
 ```
 
 ### 2. 构建数据库（推荐：使用预下载数据）
@@ -360,7 +378,9 @@ python scripts/store_to_ase.py
 
 ## 文档索引
 
+- **环境配置**: `SETUP.md` - 完整的环境配置指南（系统信息、Conda 环境、GPU 配置）
 - **实验追踪**：`experiments/EXPERIMENTS.md`
+- **实验文档**: `experiments/README.md` - 所有实验的详细技术文档
 - **Stage A 总结**：`experiments/stage_a/summary.md`
 - **Stage B 总结**：`experiments/stage_b/summary.md`
 - **Phase 1 完整报告**：`reports/PHASE1_COMPLETE_REPORT.md`
