@@ -39,7 +39,7 @@ python scripts/train_multitask.py \
   --grad-clip 1.0 \
   --warmup-epochs 5 \
   --no-amp \
-  --no-pyg \
+  --use-pyg \
   --out-dir artifacts/runs_exp203
 
 echo "========================================="
