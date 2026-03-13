@@ -1,0 +1,16 @@
+task,train_samples,hidden_dim,layers,epochs,status
+energy_per_atom,123902,256,6,50,dry_run
+formation_energy_per_atom,123902,256,6,50,dry_run
+energy_above_hull,123902,256,6,50,dry_run
+band_gap,123902,256,6,50,dry_run
+cbm,71574,224,6,55,dry_run
+vbm,71574,224,6,55,dry_run
+efermi,123856,256,6,50,dry_run
+is_metal,123902,256,6,50,dry_run
+is_stable,123902,256,6,50,dry_run
+volume,123890,320,7,70,dry_run
+density,123902,320,7,70,dry_run
+bulk_modulus_vrh,10217,160,4,80,dry_run
+shear_modulus_vrh,9685,160,4,80,dry_run
+homogeneous_poisson,9752,160,4,80,dry_run
+universal_anisotropy,9057,160,4,80,dry_run

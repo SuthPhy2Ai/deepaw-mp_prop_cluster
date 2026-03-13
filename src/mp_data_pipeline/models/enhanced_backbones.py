@@ -283,29 +283,44 @@ class EnhancedGraphBackbone(nn.Module):
         edge_dist = batch_dict["edge_dist"]
         batch = batch_dict["batch"]
 
-        # Embed atoms
-        node_emb = self.atom_emb(z)  # (num_nodes, hidden_dim)
-
-        # Add DeePAW features if enabled
-        if self.use_deepaw_features:
-            # Extract DeePAW features using pre-built graph structure
+        # Initialize node embeddings
+        if self.use_deepaw_features and self.deepaw_fusion == "replace":
+            # Replace mode: Use DeePAW features as the sole source of atom embeddings
             pos = batch_dict["pos"]
 
-            # Extract features for all nodes at once (no need to split by graph)
+            # Extract DeePAW features (frozen)
             with torch.no_grad():
                 deepaw_features = self.deepaw_extractor.extract_atom_features(
                     z, pos, edge_index
                 )  # (num_nodes, 3200)
 
-            # Project to hidden_dim
-            deepaw_proj = self.deepaw_proj(deepaw_features)  # (num_nodes, hidden_dim)
+            # Project to hidden_dim (trainable)
+            node_emb = self.deepaw_proj(deepaw_features)  # (num_nodes, hidden_dim)
 
-            # Fuse with atom embeddings
-            if self.deepaw_fusion == "add":
-                node_emb = node_emb + deepaw_proj
-            elif self.deepaw_fusion == "concat":
-                node_emb = torch.cat([node_emb, deepaw_proj], dim=-1)
-                node_emb = self.fusion_proj(node_emb)  # (num_nodes, hidden_dim)
+        else:
+            # Standard mode: Start with learnable atom embeddings
+            node_emb = self.atom_emb(z)  # (num_nodes, hidden_dim)
+
+            # Add/Concat DeePAW features if enabled
+            if self.use_deepaw_features:
+                # Extract DeePAW features using pre-built graph structure
+                pos = batch_dict["pos"]
+
+                # Extract features for all nodes at once (no need to split by graph)
+                with torch.no_grad():
+                    deepaw_features = self.deepaw_extractor.extract_atom_features(
+                        z, pos, edge_index
+                    )  # (num_nodes, 3200)
+
+                # Project to hidden_dim
+                deepaw_proj = self.deepaw_proj(deepaw_features)  # (num_nodes, hidden_dim)
+
+                # Fuse with atom embeddings
+                if self.deepaw_fusion == "add":
+                    node_emb = node_emb + deepaw_proj
+                elif self.deepaw_fusion == "concat":
+                    node_emb = torch.cat([node_emb, deepaw_proj], dim=-1)
+                    node_emb = self.fusion_proj(node_emb)  # (num_nodes, hidden_dim)
 
         # Expand edge distances to features
         edge_feat = self.rbf_expansion(edge_dist)  # (num_edges, n_rbf)

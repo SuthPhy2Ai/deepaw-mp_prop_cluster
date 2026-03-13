@@ -76,8 +76,8 @@ def parse_args() -> argparse.Namespace:
         "--deepaw-fusion",
         type=str,
         default="add",
-        choices=["add", "concat"],
-        help="How to fuse DeePAW features with atom embeddings",
+        choices=["add", "concat", "replace"],
+        help="How to fuse DeePAW features with atom embeddings (add/concat) or replace them entirely (replace)",
     )
     parser.add_argument("--batch-size", type=int, default=32)
     parser.add_argument("--epochs", type=int, default=20)

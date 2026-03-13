@@ -1,0 +1,8 @@
+#!/bin/bash
+# EXP-208: DeePAW Zero Single-Task - bulk_modulus_vrh
+# Capacity: 160×4, Samples: 10217
+
+set -e
+export PYTHONNOUSERSITE=1
+
+python scripts/train_multitask.py --db /scratch/sutianhao/data/mp-data-pipeline/data/db/mp_materials.db --split /scratch/sutianhao/data/mp-data-pipeline/data/splits/split_iid_seed42.json --stage full --only-task bulk_modulus_vrh --backbone enhanced_graph --use-deepaw-features --deepaw-checkpoint /home/sutianhao/data/deepaw_test/DeePAW-main/checkpoints/f_nonlocal_escn_best.pth --deepaw-fusion replace --hidden-dim 160 --layers 4 --cutoff 6.0 --max-neighbors 24 --n-rbf 128 --batch-size 32 --epochs 80 --lr 0.0002 --weight-decay 1e-05 --num-workers 4 --warmup-epochs 5 --grad-clip 0.8 --device cuda --out-dir /scratch/sutianhao/data/mp-data-pipeline/artifacts/runs_exp208/bulk_modulus_vrh --use-pyg
